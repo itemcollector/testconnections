@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<title>&nbsp;</title>
+	<head>
+		<style>
+			#needle {
+
+				position: absolute;
+				top: 8px;
+				left: 8px;
+				z-index: 10;
+				width: 200px;
+				height: 200px;
+			}
+
+			#text {
+				position: absolute;
+				top: 300px;
+			}
+		</style>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+		<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+		<script src="jqRotate/jqRotate.js"></script>
+	</head>
+	<body>
+		<div data-role="content">
+			<img src="http://www.clipartbest.com/cliparts/pi5/eEG/pi5eEGerT.jpeg" id="needle">
+			<div id="text">
+				<p id="lat">Lat</p>
+				<br>
+				<p id="lng">Lng</p>
+				<br>
+				<br>
+				<ul data-role="listview" id="deviceList">
+					<li>Device Settings</li>
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>
+<script>
+	document.addEventListener("deviceready", onDeviceReady, false); //creates a listener that waits for the deviceready event and then fires onDevice ready function
+
+	var watchID = null;
+	function onDeviceReady() { 
+		startCompass(); //runs the startCompass function
+		startLocation();
+		displayDevice();
+	}
+	
+	function displayDevice() {
+		var list = $("#deviceList");
+		list.empty();
+		$('#deviceList').append("<li>Device: " + device.name + "</li>");
+		$('#deviceList').append("<li>Cordova: " + device.cordova + "</li>");
+		$('#deviceList').append("<li>OS: " + device.platform + " " + device.version + "</li>");
+		list.listview("refresh");
+	}
+	
+	function startLocation() {
+		options = {
+			enableHighAccuracy: true
+		};
+		watchID = navigator.geolocation.watchPosition(geoSucces, geoError, options);
+	}
+
+	function startCompass() {
+
+		var options = {
+			frequency : 50 //sets the compass heading to be updated every 50 milliseconds
+		};
+		navigator.compass.watchHeading(onSuccess, onError, options); //gets the compass heading from device and passes heading to onSuccess function
+	}
+	
+	function geoSucces(position) {
+		$('#lat').replaceWith("lat = " + position.coords.latitude);
+		$('#lng').replaceWith("lng = " + position.coords.longitude);
+	}
+	
+	function geoError(locationError) {
+		alert("geo fehler");
+	}
+
+	function onSuccess(heading) {//device s magnetic heading is passed to heading variable
+
+		$("#needle").rotate(-heading.magneticHeading); //jquery function that gets the #needle id and rotates it minus the current heading
+	}
+
+	function onError(compassError) { //if there is an error the error will be passed to onError in the compassError variable
+		alert('Compass error: ' + compassError.code); //displays an alert with the error code
+	}
+</script>
