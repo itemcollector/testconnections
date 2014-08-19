@@ -51,21 +51,22 @@
 		startCompass(); //runs the startCompass function
 		startLocation();
 		displayDevice();
+		hasInternetConnection();
 		
-		/*document.addEventListener("pause", onPause, false);
+		document.addEventListener("pause", onPause, false);
 		document.addEventListener("resume", onResume, false);
 		document.addEventListener("online", onOnline, false);
 		document.addEventListener("offline", onOffline, false);
 		document.addEventListener("backbutton", onBackKeyDown, false);
-		document.addEventListener("menubutton", onMenuKeyDown, false);*/
+		document.addEventListener("menubutton", onMenuKeyDown, false);
 	}
 	
-	/*function onPause() {alert("onPause!");}
+	function onPause() {alert("onPause!");}
 	function onResume() {alert("onResume!");}
 	function onOnline() {alert("onOnline!");}
 	function onOffline() {alert("onOffline!");}
 	function onBackKeyDown() {alert("onBackKeyDown!");}
-	function onMenuKeyDown() {alert("onMenuKeyDown!");}*/
+	function onMenuKeyDown() {alert("onMenuKeyDown!");}
 	
 	function displayDevice() {
 		var list = $("#deviceList");
@@ -108,4 +109,18 @@
 	function onError(compassError) { //if there is an error the error will be passed to onError in the compassError variable
 		alert('Compass error: ' + compassError.code); //displays an alert with the error code
 	}
+
+	// CHECK NETWORK CONNECTION
+	function hasInternetConnection() {
+		
+		var networkState = navigator.connection.type;
+		alert(networkState);
+		if (networkState === Connection.NONE) {
+			alert(device.name + " hat keine Internetverbindung!");
+			return false;
+		} else {
+			alert(device.name + " hat eine Internetverbindung!");
+			return true;
+		}
+	};
 </script>
